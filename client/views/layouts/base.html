@@ -1,0 +1,16 @@
+<template name="layout">
+	<div class="container">
+		<div class="header">
+			{{> loginButtons}}
+		</div>
+		
+		{{> yield}}
+
+		<div class="footer">
+			<ul class="list-inline">
+			  <li><a target="_blank" href="http://thebakery.io">The Bakery</a></li>
+			  <li><a target="_blank" href="https://github.com/thebakeryio/twitter-lists">Github</a></li>
+			</ul>
+		</div>
+	</div>
+</template>

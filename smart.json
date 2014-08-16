@@ -1,0 +1,10 @@
+{
+  "packages": {
+    "iron-router": {},
+    "scss": {},
+    "bourbon": {},
+    "bootstrap-3": {},
+    "twitter-api": {},
+    "collection2": {}
+  }
+}

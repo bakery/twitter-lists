@@ -1,0 +1,13 @@
+<template name="twitterUser">
+  <a target="_blank" href="http://twitter.com/{{user.screen_name}}" class="list-group-item">
+  	<div class="row">
+		<div class="col-lg-2">
+			<img src="{{user.profile_image_url}}" width="50px" class="img-thumbnail">
+		</div>
+		<div class="col-lg-10">
+			<a target="_blank" href="http://twitter.com/{{user.screen_name}}">@{{user.screen_name}}</a><br>
+			<span><strong>{{user.followers_count}}</strong> followers</span> <span><strong>{{user.friends_count}}</strong> following</span> <span><strong>{{user.statuses_count}}</strong> tweets</span>
+		</div>
+	</div>
+  </a>
+</template>
