@@ -159,5 +159,81 @@ Meteor.methods({
         } catch(e) {
             throw new Meteor.Error(500, e);
         }
+    },
+
+    lookupList : function(request){
+        check(request, {
+            sessionId : String,
+            list : {
+                userHandle : String,
+                listName : String,
+                listUri : String
+            }
+        });
+
+        var response = new TwitterApi().get('lists/list.json', {
+            screen_name : request.list.userHandle
+        });
+
+        
+
+        if(response.statusCode === 200){
+            // find list by uri     
+
+            var theList = _.find(response.data, function(l){
+                return l.uri === request.list.listUri;
+            });
+
+            console.log('found the list', theList);
+
+            if(theList){
+                var response = new TwitterApi().get('lists/members.json', {
+                    list_id : theList.id
+                });
+
+                
+                if(response.statusCode === 200){
+                    _.each(response.data.users, function(u){
+                        TwitterUsers.upsert({
+                            twitterId : u.id,
+                            sessionId : request.sessionId
+                        },{
+                            $set : {
+                                twitterId : u.id,
+                                sessionId : request.sessionId,
+                                userData : u
+                            }
+                        });
+                    });
+                } else {
+                    throw new Meteor.Error(404, {
+                        reason : 'Cannot find members for the list: ' + request.list.listUri
+                    });    
+                }
+
+                console.log(response);        
+
+            } else {
+                throw new Meteor.Error(404, {
+                    reason : 'No such list: ' + request.list.listUri
+                });
+            }
+
+            // _.each(response.data, function(d){
+            //     if(d.user.id_str === currentUserTwitterId){
+            //         // only add lists owned by the current user
+            //         TwitterLists.upsert({
+            //             twitterId : d.id,
+            //             sessionId : request.sessionId
+            //         },{
+            //             $set : {
+            //                 twitterId : d.id,
+            //                 sessionId : request.sessionId,
+            //                 listData : d
+            //             }
+            //         });
+            //     }
+            // });
+        }
     }
 });
