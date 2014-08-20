@@ -40,6 +40,11 @@ Template.dashboard.events({
 		});
 	},
 
+	'click .btn-export' : function(e,template){
+		var data = _.map(TwitterUsers.find({}).fetch(), function(u){ return u.userData});
+		JSONFile.save(data);
+	},
+
 	'change #csvFileUpload' : function(e, template){
 		var file = e.target.files[0];
 		console.log(file);

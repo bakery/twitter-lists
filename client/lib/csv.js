@@ -37,4 +37,26 @@ CSVFile = {
             };
         }
     }
+
+    // export : function(objects, keys) {
+    //     // objects is a list of objects
+    //     // keys is a list of data pieces we are interested in
+
+    //     var rows = [keys];
+
+    //     _.each(_.map(objects, function(o){
+    //         return _.map(keys, function(k){
+    //             return typeof o[k] !== 'undefined' ? o[k] : ' ';
+    //         });
+    //     }), function(r){
+    //         rows.push(r);
+    //     });
+
+    //     var content =  _.reduce(rows, function(memo, row) {
+    //         var sanitize 
+    //         return memo + row.join(',') + '\n';
+    //     }, '');
+
+    //     saveAs(new Blob([content], {type: 'text/plain;charset=utf-8'}), 'helloworld.txt');
+    // }
 };
