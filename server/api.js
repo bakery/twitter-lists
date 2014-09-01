@@ -176,6 +176,40 @@ Meteor.methods({
         });
 
         
+        function getListMembers(listId, cursor){
+            var params = { list_id : listId };
+            if(cursor){
+                params = _.extend(params,{
+                    cursor : cursor
+                });
+            }
+            var response = new TwitterApi().get('lists/members.json',params);
+
+            if(response.statusCode === 200){
+                _.each(response.data.users, function(u){
+                    TwitterUsers.upsert({
+                        twitterId : u.id,
+                        sessionId : request.sessionId
+                    },{
+                        $set : {
+                            twitterId : u.id,
+                            sessionId : request.sessionId,
+                            userData : u
+                        }
+                    });
+                });
+
+                if(response.data.next_cursor !== 0){
+                    getListMembers(listId, response.data.next_cursor);
+                }
+
+            } else {
+                throw new Meteor.Error(404, {
+                    reason : 'Cannot find members for the list: ' + listId
+                });   
+            }
+        }
+
 
         if(response.statusCode === 200){
             // find list by uri     
@@ -187,32 +221,9 @@ Meteor.methods({
             console.log('found the list', theList);
 
             if(theList){
-                var response = new TwitterApi().get('lists/members.json', {
-                    list_id : theList.id
-                });
-
                 
-                if(response.statusCode === 200){
-                    _.each(response.data.users, function(u){
-                        TwitterUsers.upsert({
-                            twitterId : u.id,
-                            sessionId : request.sessionId
-                        },{
-                            $set : {
-                                twitterId : u.id,
-                                sessionId : request.sessionId,
-                                userData : u
-                            }
-                        });
-                    });
-                } else {
-                    throw new Meteor.Error(404, {
-                        reason : 'Cannot find members for the list: ' + request.list.listUri
-                    });    
-                }
-
-                console.log(response);        
-
+                getListMembers(theList.id);
+                
             } else {
                 throw new Meteor.Error(404, {
                     reason : 'No such list: ' + request.list.listUri
