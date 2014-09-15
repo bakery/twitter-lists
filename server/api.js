@@ -79,16 +79,43 @@ Meteor.methods({
         console.log('adding stuff to the list', request);
         console.log('number of the items in the list', request.users.length);
 
-        try {
-            var response = new TwitterApi().post('lists/members/create_all.json',{
-                list_id : request.listId,
-                user_id : request.users
-            });
 
-            return response;
-        } catch(e){
-            console.log('got error', e);
-            throw new Meteor.Error(500, e);
+        function makeBundles(list, bundleSize){
+            var cnt = -1;
+            return _.groupBy(list, function(num){ 
+                cnt++;
+                return Math.floor(cnt/bundleSize); 
+            });
+        } 
+
+        var errors = [];
+
+        _.each(makeBundles(request.users,100), function(bundle){
+            function addToList(items, retries){
+                try {
+                    var response = new TwitterApi().post('lists/members/create_all.json',{
+                        list_id : request.listId,
+                        user_id : bundle
+                    });
+                } catch(e){
+                    if(retries < 3){
+                        addToList(items, retries+1);
+                    } else {
+                        errors.push(e);
+                    }
+                }
+            }
+
+            addToList(bundle, 0);
+        });
+
+        if(errors.length === 0){
+            return {
+                itemsAdded : request.users.length,
+                statusCode : 200
+            };
+        } else {
+            throw new Meteor.Error(500, errors);
         }
     },
 
@@ -229,22 +256,6 @@ Meteor.methods({
                     reason : 'No such list: ' + request.list.listUri
                 });
             }
-
-            // _.each(response.data, function(d){
-            //     if(d.user.id_str === currentUserTwitterId){
-            //         // only add lists owned by the current user
-            //         TwitterLists.upsert({
-            //             twitterId : d.id,
-            //             sessionId : request.sessionId
-            //         },{
-            //             $set : {
-            //                 twitterId : d.id,
-            //                 sessionId : request.sessionId,
-            //                 listData : d
-            //             }
-            //         });
-            //     }
-            // });
         }
     }
 });

@@ -2,27 +2,17 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "scss": {
-        "version": "0.9.3"
-      },
-      "bourbon": {
-        "version": "3.1.8.1"
-      },
-      "bootstrap-3": {
-        "version": "3.2.0-1"
-      },
-      "twitter-api": {
-        "version": "0.1.2"
-      },
-      "collection2": {
-        "version": "0.4.6"
-      }
+      "scss": {},
+      "bourbon": {},
+      "bootstrap-3": {},
+      "twitter-api": {},
+      "collection2": {}
     },
     "packages": {
       "scss": {
         "git": "https://github.com/fourseven/meteor-scss.git",
-        "tag": "v0.9.3",
-        "commit": "185f3b2787fb85e653f7b7bf603d1493ed14943d"
+        "tag": "v0.9.4",
+        "commit": "b5ebfe2bb8a58a03966b6f49e185544a0233ddb0"
       },
       "bourbon": {
         "git": "https://github.com/chicagogrooves/meteor-bourbon.git",
@@ -46,8 +36,8 @@
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",
-        "tag": "v0.7.0",
-        "commit": "77d267aec4ba8a70f677e5d9ef9fb91fb0e3f0f6"
+        "tag": "v1.0.2",
+        "commit": "21a4ce06ae29bff2fb1203c44ea24e61f1c3edba"
       }
     }
   }

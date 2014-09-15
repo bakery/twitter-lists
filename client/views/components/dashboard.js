@@ -17,11 +17,7 @@ Template.dashboard.events({
 			template.$('.btn-choose-list').removeAttr('disabled');
 
 			if(error){
-				if(error.reason.response.statusCode === 503){
-					alert("Twitter is refusing to collaborate, please try again");
-				} else {
-					alert("Something went terrible wrong.");
-				}
+				alert("Something went terrible wrong.");
 			} else {
 				alert('items added to the list');
 			}
